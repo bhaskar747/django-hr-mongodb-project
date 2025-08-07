@@ -1,0 +1,94 @@
+{% extends 'payroll_manager/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+
+    <!-- Display any success/error messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Employee Dashboard</h2>
+        <!-- UPDATED: Added the Change Password button -->
+        <a href="{% url 'change_password' %}" class="btn btn-warning">
+            Change Password
+        </a>
+    </div>
+
+    <div class="row">
+        <!-- Column 1: Personal and Address Info -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Employee Info
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Employee Name:</strong> {{ user_info.employee_name }}</li>
+                    <li class="list-group-item"><strong>Department:</strong> {{ user_info.department.department_name }}</li>
+                    <li class="list-group-item"><strong>Company:</strong> {{ user_info.company.company_name }}</li>
+                    <li class="list-group-item"><strong>Date of Join:</strong> {{ user_info.employee_doj }}</li>
+                    <li class="list-group-item"><strong>Grade:</strong> {{ user_info.grade.grade_name }}</li>
+                </ul>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    Employee Address
+                    <!-- FIXED: Changed request.user to request.user.user_id -->
+                    <a class="btn btn-sm btn-outline-primary" href="{% url 'changeAddress' emp_id=request.user.user_id %}">Update Address</a>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Building:</strong> {{ user_info.address.building_details|default:"Not Available" }}</li>
+                    <li class="list-group-item"><strong>Road:</strong> {{ user_info.address.road|default:"Not Available" }}</li>
+                    <li class="list-group-item"><strong>City:</strong> {{ user_info.address.city|default:"Not Available" }}</li>
+                    <li class="list-group-item"><strong>State:</strong> {{ user_info.address.state.state_name|default:"Not Available" }}</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Column 2: Salary Info -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Salary Info
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Basic Amount:</strong> {{ user_paygrade.basic_amt|default:0 }}</li>
+                    <li class="list-group-item"><strong>Allowance:</strong> {{ user_paygrade.da_amt|default:0 }}</li>
+                    <li class="list-group-item"><strong>Provident Fund:</strong> {{ user_paygrade.pf_amt|default:0 }}</li>
+                    <li class="list-group-item"><strong>Health Funds:</strong> {{ user_paygrade.medical_amt|default:0 }}</li>
+                    <li class="list-group-item"><strong>Gross Salary:</strong> {{ user_pay.gross_salary|default:0 }}</li>
+                    <li class="list-group-item"><strong>Net Salary:</strong> {{ user_pay.net_salary|default:0 }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section: Leaves -->
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            Leave History
+            <!-- FIXED: Changed request.user to request.user.user_id -->
+            <a class="btn btn-sm btn-outline-primary" href="{% url 'leaveApply' emp_id=request.user.user_id %}">Apply for Leave</a>
+        </div>
+        <div class="list-group list-group-flush">
+            {% for leave in user_leave %}
+                <a href="#" class="list-group-item list-group-item-action {% if leave.is_approved == 1 %} list-group-item-success {% elif leave.is_approved == -1 %} list-group-item-danger {% else %} list-group-item-warning {% endif %}">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Leave Type: {{ leave.get_leave_type_display }}</h5>
+                        <small>Status: {% if leave.is_approved == 1 %}Approved{% elif leave.is_approved == -1 %}Rejected{% else %}Pending{% endif %}</small>
+                    </div>
+                    <p class="mb-1">Date: {{ leave.leave_date }}</p>
+                </a>
+            {% empty %}
+                <div class="list-group-item">You have no leave history.</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'payroll_manager/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Register New Employee</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="">
+                        {% csrf_token %}
+
+                        <!-- Display any global form errors -->
+                        {% if form.non_field_errors or formSub.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }} {{ formSub.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+                        <h5 class="mb-3">Account Credentials</h5>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="{{ form.user_id.id_for_label }}" class="form-label">Employee ID</label>
+                                {{ form.user_id }}
+                                <div class="text-danger mt-1"><small>{{ form.user_id.errors }}</small></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+                                {{ form.password }}
+                                <div class="text-danger mt-1"><small>{{ form.password.errors }}</small></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.password2.id_for_label }}" class="form-label">Confirm Password</label>
+                                {{ form.password2 }}
+                                <div class="text-danger mt-1"><small>{{ form.password2.errors }}</small></div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h5 class="mb-3">Employee Information</h5>
+                        <div class="row">
+                             <div class="col-md-6 mb-3">
+                                <label for="{{ formSub.employee_name.id_for_label }}" class="form-label">Employee Name</label>
+                                {{ formSub.employee_name }}
+                                <div class="text-danger mt-1"><small>{{ formSub.employee_name.errors }}</small></div>
+                            </div>
+                             <div class="col-md-6 mb-3">
+                                <label for="{{ formSub.employee_doj.id_for_label }}" class="form-label">Date of Joining</label>
+                                {{ formSub.employee_doj }}
+                                <div class="text-danger mt-1"><small>{{ formSub.employee_doj.errors }}</small></div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ formSub.company.id_for_label }}" class="form-label">Company</label>
+                                {{ formSub.company }}
+                                <div class="text-danger mt-1"><small>{{ formSub.company.errors }}</small></div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ formSub.department.id_for_label }}" class="form-label">Department</label>
+                                {{ formSub.department }}
+                                <div class="text-danger mt-1"><small>{{ formSub.department.errors }}</small></div>
+                            </div>
+                             <div class="col-md-4 mb-3">
+                                <label for="{{ formSub.grade.id_for_label }}" class="form-label">Grade</label>
+                                {{ formSub.grade }}
+                                <div class="text-danger mt-1"><small>{{ formSub.grade.errors }}</small></div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">Register Employee</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
